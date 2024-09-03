@@ -14,8 +14,13 @@ contract Pixelbattle {
 
     mapping(uint256 => mapping(uint256 => Pixel)) public pixels;
 
-    function drawPixel(uint256 row, uint256 column, uint64 color) public {
-        address currentOwner = pixels[row][column].owner;
+    function drawPixel(uint256 row, uint256 column, uint64 color) public payable {
+        Pixel storage pixel = pixels[row][column];
+        require(msg.value >= pixel.price, "Incorrect price");
+        address currentOwner = pixel.owner;
+        // TODO: send 40% tokens to currentOwner;
+        pixel.color = color;
+        pixel.owner = msg.sender;
     }
 
 }
